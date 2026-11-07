@@ -1,4 +1,4 @@
-# Hamilton path using SAT solver Glucose.
+# Hamiltonian path using SAT solver Glucose.
 
 ## TODO LIST
 
