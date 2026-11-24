@@ -2,8 +2,9 @@ from itertools import combinations
 
 def load_instance(input_file_name):
     global NUMBER_OF_VERTECES, NUMBER_OF_EDGES, START_VERTEX, GOAL_VERTEX, ATOMIC_STATEMENTS
+    global out_edges, in_edges
 
-    edges = []
+    edges = {}
     out_edges = {}
     in_edges = {}
     ATOMIC_STATEMENTS = [] # edge is in Hamiltonian path
@@ -13,18 +14,30 @@ def load_instance(input_file_name):
         NUMBER_OF_VERTECES, NUMBER_OF_EDGES = map(int, file.readline().split())
         START_VERTEX, GOAL_VERTEX = map(int, file.readline().split())
 
-
-        for i in range(NUMBER_OF_VERTECES):
-            edges.append([])
-
         for i in range(NUMBER_OF_EDGES):
             ATOMIC_STATEMENTS.append(i+1)
+
+        number_of_edge = 1
 
         for line in range(NUMBER_OF_EDGES):
             line = map(int, file.readline().split())
             if line:
+
                 u, v = [int(i) for i in line]
-                edges[u].append(v)
+
+                edges[number_of_edge] = [u, v]
+
+                if u not in out_edges:
+                    out_edges[u] = [number_of_edge]
+                else:
+                    out_edges[u].append(number_of_edge)
+
+                if v not in in_edges:
+                    in_edges[v] = [number_of_edge]
+                else:
+                    in_edges[u].append(number_of_edge)
+
+            number_of_edge += 1
 
         print(edges)
     
@@ -62,9 +75,33 @@ def restrict_number_of_edges(cnf):
 
         cnf.append(condition)
 
-def deg_out_one(): # degree of every vertex, except goal vertex, is 1
-    pass
+def cnf_for_n_from_k(variables, n, k):
 
+    new_cnf = []
+    combs = combinations(variables, k - n + 1)
+    for comb in combs:
+        condition = []
+
+        for atomic_statement in comb:
+            condition.append(atomic_statement)
+        
+        new_cnf.append(condition)
+
+    combs = combinations(variables, n+1)
+    for comb in combs:
+        condition = []
+        
+        for atomic_statement in comb:
+            condition.append(-atomic_statement)
+
+        new_cnf.append(condition)
+
+    return new_cnf
+
+
+def deg_out_one(): # degree of every vertex, except goal vertex, is 1
+    variables = []
+    cnf_for_deg_out = cnf_for_n_from_k(variables, 1, len(variables))
 
 
 
