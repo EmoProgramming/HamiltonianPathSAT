@@ -35,7 +35,7 @@ def load_instance(input_file_name):
                 if v not in in_edges:
                     in_edges[v] = [number_of_edge]
                 else:
-                    in_edges[u].append(number_of_edge)
+                    in_edges[v].append(number_of_edge)
 
             number_of_edge += 1
 
@@ -59,7 +59,8 @@ def restrict_number_of_edges(cnf):
 
         new_cnf = cnf_for_n_from_k(ATOMIC_STATEMENTS, len(ATOMIC_STATEMENTS), NUMBER_OF_VERTECES-1)
 
-        print(new_cnf)
+        #print(new_cnf)
+        cnf += new_cnf
 
 def cnf_for_n_from_k(variables, k, n):
 
@@ -85,11 +86,21 @@ def cnf_for_n_from_k(variables, k, n):
     return new_cnf
 
 
-def deg_out_one(): # degree of every vertex, except goal vertex, is 1
-    variables = []
-    cnf_for_deg_out = cnf_for_n_from_k(variables, 1, len(variables))
+def deg_in_one(): # degree of every vertex, except goal vertex, is 1
+    print(in_edges)
+    print(out_edges)
+    for vertex in in_edges:
+
+        if vertex == START_VERTEX: # skip start vertex, because its deg of in edges must be 0
+            continue
+
+        variables = in_edges[vertex]
+        cnf_for_deg_in = cnf_for_n_from_k(variables, len(variables), 1)
+        print(cnf_for_deg_in)
 
 
 
 load_instance("./instances/input-triangle.in")
 encode()
+
+deg_in_one()
