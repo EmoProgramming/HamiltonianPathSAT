@@ -57,25 +57,11 @@ def encode():
 
 def restrict_number_of_edges(cnf):
 
-    combs = combinations(ATOMIC_STATEMENTS, len(ATOMIC_STATEMENTS) - NUMBER_OF_VERTECES + 2)
-    for comb in combs: # at least NUMBER_OF_VERTECES - 1 edges are in Hamiltanian path4
-        condition = []
+        new_cnf = cnf_for_n_from_k(ATOMIC_STATEMENTS, len(ATOMIC_STATEMENTS), NUMBER_OF_VERTECES-1)
 
-        for atomic_statement in comb:
-            condition.append(atomic_statement)
-        
-        cnf.append(condition)
+        print(new_cnf)
 
-    combs = combinations(ATOMIC_STATEMENTS, NUMBER_OF_VERTECES)
-    for comb in combs:
-        condition = []
-        
-        for atomic_statement in comb:
-            condition.append(-atomic_statement)
-
-        cnf.append(condition)
-
-def cnf_for_n_from_k(variables, n, k):
+def cnf_for_n_from_k(variables, k, n):
 
     new_cnf = []
     combs = combinations(variables, k - n + 1)
