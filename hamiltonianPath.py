@@ -50,6 +50,7 @@ def encode():
     cnf = []
 
     restrict_number_of_edges(cnf)
+    restrict_degrees_of_path(cnf)
 
     print(cnf)
 
@@ -86,9 +87,9 @@ def cnf_for_n_from_k(variables, k, n):
     return new_cnf
 
 
-def deg_in_one(): # degree of every vertex, except goal vertex, is 1
-    print(in_edges)
-    print(out_edges)
+def restrict_degrees_of_path(cnf): # degree of every vertex, except goal vertex, is 1
+    #print(in_edges)
+    #print(out_edges)
     for vertex in in_edges:
 
         if vertex == START_VERTEX: # skip start vertex, because its deg of in edges must be 0
@@ -96,11 +97,24 @@ def deg_in_one(): # degree of every vertex, except goal vertex, is 1
 
         variables = in_edges[vertex]
         cnf_for_deg_in = cnf_for_n_from_k(variables, len(variables), 1)
-        print(cnf_for_deg_in)
+        cnf += cnf_for_deg_in
+        #print(cnf_for_deg_in)
+
+    for vertex in out_edges:
+
+        if vertex == GOAL_VERTEX:
+            continue
+
+        variables = out_edges[vertex]
+        cnf_for_deg_out = cnf_for_n_from_k(variables, len(variables), 1)
+        cnf += cnf_for_deg_out
+        #print(cnf_for_deg_out)
+
+    
+    
+
 
 
 
 load_instance("./instances/input-triangle.in")
 encode()
-
-deg_in_one()
